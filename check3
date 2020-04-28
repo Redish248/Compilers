@@ -1,0 +1,8 @@
+var a, b, c;
+begin
+	a := 15;
+	c := 10;
+	b := (a + c) ^ a / (c + 5) ;	
+	c := a - b;
+
+end

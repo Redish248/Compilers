@@ -1,0 +1,18 @@
+var a, b, c;
+begin
+a := 15;
+c := 10;
+b := (a + c) * a / (c + 5) ;
+
+/* test comment */
+
+WHILE (-(c > a) AND -(b > a )) DO
+begin
+c := c + 4;
+end
+
+c := a - b;
+
+a := 2 * b - c * 4;
+
+end

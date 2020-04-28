@@ -1,0 +1,21 @@
+Var a; b; c;
+Begin
+	a := 15;
+	c := 10;
+	b := (a + c) * a / (c + 5) ;
+
+	/**** comment111
+	comment2 *****/
+
+	WHILE ((a > 15) OR (c < 10)) DO Begin
+	c := c * 2;
+	End
+
+	/* comment
+	comment */
+
+	c := a XOR b;
+
+	a := 2 * b - c * 4;
+
+End
