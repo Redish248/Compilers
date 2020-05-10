@@ -1,5 +1,5 @@
-var a, b, c;
-begin
+Var a, b, c;
+Begin
 a := 15;
 c := 10;
 b := (a + c) * a / (c + 5) ;
@@ -7,12 +7,12 @@ b := (a + c) * a / (c + 5) ;
 /* test comment */
 
 WHILE (-(c > a) AND -(b > a )) DO
-begin
+Begin
 c := c + 4;
-end
+End
 
 c := a - b;
 
 a := 2 * b - c * 4;
 
-end
+End
