@@ -6,9 +6,7 @@ import java.util.ArrayList;
 %standalone
 %line
 %column
-%state unaryMinus
-
-
+%state unaryMinus, binaryMinus
 
 %{
 
@@ -52,14 +50,34 @@ LoopStart = "WHILE"
 {LoopStart} {System.out.printf("Found LoopStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}		
 {Separator} {System.out.printf("Found Separator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
 {AppropriationSymbol} {System.out.printf("Found AppropriationSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}
-{BinaryOperator} {System.out.printf("Found BinaryOperator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
-{BracketStart} {System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}
-{Constant}  {
-	
+{BinaryOperator} {System.out.printf("Found BinaryOperator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}
+{BracketStart} {System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}		
+<unaryMinus> {
+	{MinusSymbol} {System.out.printf("Found Unary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}
+	{BracketStart} {System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); yybegin(unaryMinus);}
+	{Constant} 	{
+					if (!identifiersConstants.contains(yytext())) {
+						System.out.printf("Found Constant: %s, HEX: %s - line: %d, start symbol: %d\n", yytext(), getHex(yytext()), yyline+1, yycolumn);				 
+						identifiersConstants.add(yytext());
+					}
+					yybegin(binaryMinus);
+				}
+	{Identificator} { 
+						if (!checkForKeyWords(yytext(), yyline+1, yycolumn)) {
+							if (!identifiersConstants.contains(yytext())) {
+								System.out.printf("Found Identificator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);					 
+								identifiersConstants.add(yytext());
+							}
+						}
+						yybegin(binaryMinus);
+					}
+}
+{Constant}  {	
 				if (!identifiersConstants.contains(yytext())) {
 					System.out.printf("Found Constant: %s, HEX: %s - line: %d, start symbol: %d\n", yytext(), getHex(yytext()), yyline+1, yycolumn);				 
 					identifiersConstants.add(yytext());
 				}
+				yybegin(binaryMinus);
 			}
 {Identificator} { 
 					if (!checkForKeyWords(yytext(), yyline+1, yycolumn)) {
@@ -68,13 +86,10 @@ LoopStart = "WHILE"
 							identifiersConstants.add(yytext());
 						}
 					}
-				}		
-{MinusSymbol} {System.out.printf("Found Binary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
-<unaryMinus> {
-	{MinusSymbol} {System.out.printf("Found Unary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
-	{Constant} {System.out.printf("Found Constant: %s, HEX: %s - line: %d, start symbol: %d\n", yytext(), getHex(yytext()), yyline+1, yycolumn);}
-	{Identificator} {System.out.printf("Found Identificator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
-	{BracketStart} {System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
+					yybegin(binaryMinus);
+				}
+<binaryMinus> {				
+	{MinusSymbol} {System.out.printf("Found Binary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}
 }
 {Whitespaces} {}
-. {System.out.printf("ERROR. Unknown lexem: %s - line: %d, start symbol: %d", yytext(), yyline+1, yycolumn);}
+. {System.out.printf("ERROR. Unknown lexem: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);}

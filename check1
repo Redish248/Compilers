@@ -2,7 +2,7 @@ Var a, b, c;
 Begin
 a := 15;
 c := 10;
-b := (a + c) * a / (c + 5) ;
+b := (a + c) * a / (c - 5) ;
 
 /* test comment */
 
