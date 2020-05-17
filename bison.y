@@ -1,0 +1,34 @@
+%language "Java"
+
+%define api.parser.class {SyntaxAnalyser}
+%define api.parser.public
+
+
+%token COMMENT
+    END_KEYWORD
+    VAR_KEYWORD
+    DO_KEYWORD
+    BEGIN_KEYWORD
+    LOOP_START
+    SEMICOLON_SEPARATOR
+    COMMA_SEPARATOR
+    END_BRACKET
+    APPROPRIATION
+    PLUS
+    TIMES
+    DIVIDE
+    GRATER_OPERATOR
+    LESS_OPERATOR
+    END_BRACKET
+    AND_OPERATOR
+    OR_OPERATOR
+    XOR_OPERATOR
+    UNARY_MINUS
+    START_BRACKET
+    CONSTANT
+    IDENTIFIER
+    BINARY_MINUS
+    SPACE
+    ERROR
+
+
