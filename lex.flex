@@ -84,11 +84,11 @@ LoopStart = "WHILE"
                     yybegin(unaryMinus);
                     switch (yytext()) {
                                         case "+" : return SyntaxAnalyser.Lexer.PLUS;
-                                        case "*" : return SyntaxAnalyser.Lexer.TIMES;
+                                        case "*" : return SyntaxAnalyser.Lexer.MULTIPLY;
                                         case "/" : return SyntaxAnalyser.Lexer.DIVIDE;
                                         case ">" : return SyntaxAnalyser.Lexer.GRATER_OPERATOR;
                                         case "<" : return SyntaxAnalyser.Lexer.LESS_OPERATOR;
-                                        case "=" : return SyntaxAnalyser.Lexer.EQUALS_BRACKET;
+                                        case "=" : return SyntaxAnalyser.Lexer.EQUALS_OPERATOR;
                                         case "AND" : return SyntaxAnalyser.Lexer.AND_OPERATOR;
                                         case "OR" : return SyntaxAnalyser.Lexer.OR_OPERATOR;
                                         case "XOR" : return SyntaxAnalyser.Lexer.XOR_OPERATOR;
