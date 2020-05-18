@@ -3,17 +3,34 @@
 %define api.parser.class {SyntaxAnalyser}
 %define api.parser.public
 
+
+%code imports {
+  import java.io.IOException;
+}
+
 %token COMMENT
 %token END_KEYWORD VAR_KEYWORD DO_KEYWORD BEGIN_KEYWORD
 %token LOOP_START
 %token SEMICOLON_SEPARATOR COMMA_SEPARATOR END_BRACKET
-%token APPROPRIATION
+%token APPROPRIATION_OPERATOR
 %token PLUS MULTIPLY DIVIDE GRATER_OPERATOR LESS_OPERATOR EQUALS_OPERATOR AND_OPERATOR OR_OPERATOR XOR_OPERATOR
 %token UNARY_MINUS
 %token START_BRACKET
 %token CONSTANT
 %token IDENTIFIER
-%token BINARY_MINUS EOL NUM
+%token BINARY_MINUS
+
+%code {
+     public static void main(String[] args) throws IOException {
+        java.io.FileInputStream stream = new java.io.FileInputStream(args[i]);
+        java.io.Reader reader = new java.io.InputStreamReader(stream, encodingName);
+        scanner = new LexerAnalyser(reader);
+        SyntaxAnalyser syntaxAnalyser = new SyntaxAnalyser(new LexerAnalyser(scanner));
+        Compiler compiler = new Compiler();
+        compiler.createRootNode();
+        syntaxAnalyser.parse();
+     }
+}
 
 %start program
 
@@ -24,7 +41,7 @@ program:
     ;
 
 programBody:
-    BEGIN_KEYWORD operators END_KEYWORD { $$ = $3 }
+    BEGIN_KEYWORD operators END_KEYWORD { $$ = $2 }
     ;
 
 variablesDeclarations:
@@ -44,45 +61,26 @@ operators:
     ;
 
 operator:
-   appropriation
-   | complexOperator
-   | hardOperator
+   IDENTIFIER APPROPRIATION_OPERATOR expression
+   | BEGIN_KEYWORD operators END_KEYWORD { $$ = $3 }
+   | LOOP_START expression DO_KEYWORD operator
    ;
 
-appropriation:
-    IDENTIFIER
-    | expression SEMICOLON_SEPARATOR
-    ;
-
-complexOperator:
-    BEGIN_KEYWORD operators END_KEYWORD { $$ = $3 }
-    ;
-
-hardOperator:
-    loopOperator
-    ;
 
 expression:
-    UNARY_MINUS subExpression
-    | subExpression
-    ;
-
-subExpression:
-    expression
-    | operand
-    | subExpression PLUS subExpression { $$ = $1 + $3; }
-    | subExpression MULTIPLY subExpression { $$ = $1 * $3; }
-    | subExpression DIVIDE subExpression { $$ = $1 / $3; }
-    | subExpression GRATER_OPERATOR subExpression { $$ = $1 > $3; }
-    | subExpression LESS_OPERATOR subExpression { $$ = $1 < $3; }
-    | subExpression EQUALS_OPERATOR subExpression {}
-    | subExpression AND_OPERATOR subExpression {}
-    | subExpression OR_OPERATOR subExpression   {}
-    | subExpression XOR_OPERATOR subExpression  {}
-    ;
-
-loopOperator:
-    LOOP_START expression DO_KEYWORD operator
+    UNARY_MINUS expression
+    | START_BRACKET expression END_BRACKET { $$ = $2}
+    | expression PLUS expression { $$ = $1 + $3; }
+    | expression MULTIPLY expression { $$ = $1 * $3; }
+    | expression DIVIDE expression { $$ = $1 / $3; }
+    | expression GRATER_OPERATOR expression { $$ = $1 > $3 ? true : false; }
+    | expression LESS_OPERATOR expression { $$ = $1 < $3; }
+    | expression EQUALS_OPERATOR expression {}
+    | expression AND_OPERATOR expression {}
+    | expression OR_OPERATOR expression   {}
+    | expression XOR_OPERATOR expression  {}
+    | IDENTIFIER
+    | CONSTANT
     ;
 
 %%

@@ -72,7 +72,7 @@ LoopStart = "WHILE"
 {AppropriationSymbol} {
                         System.out.printf("Found AppropriationSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
                         yybegin(unaryMinus);
-                        return SyntaxAnalyser.Lexer.APPROPRIATION;
+                        return SyntaxAnalyser.Lexer.APPROPRIATION_OPERATOR;
                     }
 {BracketStart} {
                     System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
