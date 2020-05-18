@@ -1,5 +1,5 @@
 LexerAnalyser.class
 LexerAnalyser.java
 Compilers.iml
-.idea/*
-
+/.idea/
+SyntaxAnalyser.java
