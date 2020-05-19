@@ -2,12 +2,23 @@ import java.util.ArrayList;
 %%
 
 %class LexerAnalyser
+%implements SyntaxAnalyser.Lexer
 %standalone
 %line
 %column
 %state unaryMinus, binaryMinus
 
 %{
+
+    private Object yylval;
+
+    public Object getLVal() {
+        return yylval;
+    }
+
+    public void yyerror(String message) {
+      System.out.println(message);
+    }
 
 	ArrayList<String> identifiersConstants = new ArrayList();
 
@@ -111,6 +122,7 @@ LoopStart = "WHILE"
 						System.out.printf("Found Constant: %s, HEX: %s - line: %d, start symbol: %d\n", yytext(), getHex(yytext()), yyline+1, yycolumn);				 
 						identifiersConstants.add(yytext());
 					}
+					yylval = new Integer(yytext());
 					yybegin(binaryMinus);
 					return SyntaxAnalyser.Lexer.CONSTANT;
 				}
@@ -130,6 +142,7 @@ LoopStart = "WHILE"
 					System.out.printf("Found Constant: %s, HEX: %s - line: %d, start symbol: %d\n", yytext(), getHex(yytext()), yyline+1, yycolumn);				 
 					identifiersConstants.add(yytext());
 				}
+				yylval = new Integer(yytext());
 				yybegin(binaryMinus);
 				return SyntaxAnalyser.Lexer.CONSTANT;
 			}

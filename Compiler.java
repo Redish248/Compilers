@@ -1,3 +1,4 @@
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -13,7 +14,7 @@ public class Compiler {
    }
 
    public Tree addNode() {
-
+      return null;
    }
 
    public void printTree() {
@@ -24,20 +25,18 @@ public class Compiler {
        currentNode = currentNode.getParent();
    }
 
-   public Tree newVariable() {
-
-   }
 
    public Tree newNumber() {
-
+      return null;
    }
 
    public Tree newAppropriation() {
-
+      return null;
    }
 
    public Tree newVariable() {
        //чекать на объявление
+      return null;
    }
 
    public void addToVariablesList(Tree variable) {

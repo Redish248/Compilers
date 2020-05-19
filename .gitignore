@@ -3,3 +3,5 @@ LexerAnalyser.java
 Compilers.iml
 /.idea/
 SyntaxAnalyser.java
+/Tree.class
+/Compiler.class
