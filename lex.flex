@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import com.sun.org.apache.xpath.internal.operations.String;import java.util.ArrayList;
 %%
 
 %class LexerAnalyser
@@ -57,10 +57,12 @@ LoopStart = "WHILE"
 
 {Comment} {
             System.out.printf("Found Comment: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+            yylval = new String(yytext());
             return SyntaxAnalyser.Lexer.COMMENT;
         }
 {Keyword} {
             System.out.printf("Found Keyword: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+            yylval = new String(yytext());
             switch (yytext()) {
                 case "End" : return SyntaxAnalyser.Lexer.END_KEYWORD;
                 case "Var" : return SyntaxAnalyser.Lexer.VAR_KEYWORD;
@@ -70,10 +72,12 @@ LoopStart = "WHILE"
       }
 {LoopStart} {
                 System.out.printf("Found LoopStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                yylval = new String(yytext());
                 yybegin(unaryMinus);
                 return SyntaxAnalyser.Lexer.LOOP_START;}
 {Separator} {
                 System.out.printf("Found Separator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                yylval = new String(yytext());
                 switch (yytext()) {
                     case ";" : return SyntaxAnalyser.Lexer.SEMICOLON_SEPARATOR;
                     case "," : return SyntaxAnalyser.Lexer.COMMA_SEPARATOR;
@@ -82,16 +86,19 @@ LoopStart = "WHILE"
             }
 {AppropriationSymbol} {
                         System.out.printf("Found AppropriationSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                        yylval = new String(yytext());
                         yybegin(unaryMinus);
                         return SyntaxAnalyser.Lexer.APPROPRIATION_OPERATOR;
                     }
 {BracketStart} {
                     System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                    yylval = new String(yytext());
                     yybegin(unaryMinus);
                     return SyntaxAnalyser.Lexer.START_BRACKET;
                 }
 {BinaryOperator} {
                     System.out.printf("Found BinaryOperator: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                    yylval = new String(yytext());
                     yybegin(unaryMinus);
                     switch (yytext()) {
                                         case "+" : return SyntaxAnalyser.Lexer.PLUS;
@@ -109,11 +116,13 @@ LoopStart = "WHILE"
 <unaryMinus> {
 	{MinusSymbol} {
                     System.out.printf("Found Unary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                    yylval = new String(yytext());
                     yybegin(unaryMinus);
                     return SyntaxAnalyser.Lexer.UNARY_MINUS;
                 }
 	{BracketStart} {
                     System.out.printf("Found BracketStart: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                    yylval = new String(yytext());
                     yybegin(unaryMinus);
                     return SyntaxAnalyser.Lexer.START_BRACKET;
                 }
@@ -133,6 +142,7 @@ LoopStart = "WHILE"
 								identifiersConstants.add(yytext());
 							}
 						}
+						yylval = new String(yytext());
 						yybegin(binaryMinus);
 						return SyntaxAnalyser.Lexer.IDENTIFIER;
 					}
@@ -153,12 +163,14 @@ LoopStart = "WHILE"
 							identifiersConstants.add(yytext());
 						}
 					}
+					yylval = new String(yytext());
 					yybegin(binaryMinus);
 					return SyntaxAnalyser.Lexer.IDENTIFIER;
 				}
 <binaryMinus> {				
 	{MinusSymbol} {
                     System.out.printf("Found Binary MinusSymbol: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+                    yylval = new String(yytext());
                     return SyntaxAnalyser.Lexer.BINARY_MINUS;
                 }
 }
