@@ -45,12 +45,42 @@ public class Compiler {
 
 
    public void createRootNode() {
-       Tree tree = new Tree(null, "ROOT", null, new ArrayList<>());
+       Tree tree = new Tree("ROOT", null);
        currentNode = tree;
    }
 
    public Tree addNode() {
       return null;
+   }
+
+   public Tree astNode(String parent, String firstChild, String secondChild) {
+        if (!currentNode.getName().equals(parent)) {
+            Tree p = new Tree(parent, currentNode);
+            currentNode = p;
+        }
+        ArrayList<Tree> children = new ArrayList<>();
+        children.add(new Tree(firstChild, currentNode));
+        children.add(new Tree(secondChild, currentNode));
+        currentNode.setChildren(children);
+        Tree node = currentNode;
+        findNextNode();
+        return node;
+   }
+
+   private void findNextNode() {
+       while (checkCurrentNodeProcessing() && !(currentNode.getName().equals("ROOT") && currentNode.isProcessed())) {}
+   }
+
+   private boolean checkCurrentNodeProcessing() {
+       for (Tree node: currentNode.getChildren()) {
+           if (!node.isProcessed()) {
+               currentNode = node;
+               return false;
+           }
+       }
+       currentNode.setProcessed(true);
+       currentNode = currentNode.getParent();
+       return true;
    }
 
    public void printTree() {

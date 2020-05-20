@@ -16,13 +16,15 @@
 %token IDENTIFIER
 %token BINARY_MINUS
 
+%type <Tree> program programBody variablesDeclarations variables operators operator expression
+
 
 %start program
 
 %%
 
 program:
-    variablesDeclarations programBody {}
+    variablesDeclarations programBody { $$ = astNode("ROOT", "Variable Declaration", "Program Body") }
     ;
 
 programBody:
@@ -30,42 +32,41 @@ programBody:
     ;
 
 variablesDeclarations:
-    { $$ = NULL}
-    | VAR_KEYWORD variables { $$ = $2 }
+    VAR_KEYWORD variables { $$ = astNode("Variables Declaration", "Var", "Variables") }
     ;
 
 variables:
-    IDENTIFIER SEMICOLON_SEPARATOR {}
-    | IDENTIFIER COMMA_SEPARATOR variables { $$ = $3 }
-    | IDENTIFIER SEMICOLON_SEPARATOR variables { $$ = $3 }
+    IDENTIFIER SEMICOLON_SEPARATOR { $$ = astNode("", "", "") }
+    | IDENTIFIER COMMA_SEPARATOR variables { $$ = astNode("", "", "") }
+    | IDENTIFIER SEMICOLON_SEPARATOR variables { $$ = astNode("", "", "") }
     ;
 
 operators:
-    operator
-    | operator operators
+    operator { $$ = astNode("", "", "") }
+    | operator operators { $$ = astNode("", "", "") }
     ;
 
 operator:
-   IDENTIFIER APPROPRIATION_OPERATOR expression
-   | BEGIN_KEYWORD operators END_KEYWORD { $$ = $3 }
-   | LOOP_START expression DO_KEYWORD operator
+   IDENTIFIER APPROPRIATION_OPERATOR expression { $$ = astNode("", "", "") }
+   | BEGIN_KEYWORD operators END_KEYWORD { $$ = astNode("", "", "") }
+   | LOOP_START expression DO_KEYWORD operator { $$ = astNode("", "", "") }
    ;
 
 
 expression:
-    UNARY_MINUS expression
-    | START_BRACKET expression END_BRACKET { $$ = $2}
-    | expression PLUS expression { $$ = $1 + $3; }
-    | expression MULTIPLY expression { $$ = $1 * $3; }
-    | expression DIVIDE expression { $$ = $1 / $3; }
-    | expression GRATER_OPERATOR expression { $$ = $1 > $3 ? true : false; }
-    | expression LESS_OPERATOR expression { $$ = $1 < $3; }
-    | expression EQUALS_OPERATOR expression {}
-    | expression AND_OPERATOR expression {}
-    | expression OR_OPERATOR expression   {}
-    | expression XOR_OPERATOR expression  {}
-    | IDENTIFIER
-    | CONSTANT
+    UNARY_MINUS expression { $$ = astNode("", "", "") }
+    | START_BRACKET expression END_BRACKET { $$ = astNode("", "", "") }
+    | expression PLUS expression { $$ = astNode("+", "Expression", "Expression"); }
+    | expression MULTIPLY expression { $$ = astNode("*", "Expression", "Expression");; }
+    | expression DIVIDE expression { $$ = astNode("/", "Expression", "Expression");; }
+    | expression GRATER_OPERATOR expression { $$ = astNode(">", "Expression", "Expression");; }
+    | expression LESS_OPERATOR expression { $$ = astNode("<", "Expression", "Expression");; }
+    | expression EQUALS_OPERATOR expression { $$ = astNode("=", "Expression", "Expression"); }
+    | expression AND_OPERATOR expression { $$ = astNode("AND", "Expression", "Expression"); }
+    | expression OR_OPERATOR expression   { $$ = astNode("OR", "Expression", "Expression"); }
+    | expression XOR_OPERATOR expression  { $$ = astNode("XOR", "Expression", "Expression"); }
+    | IDENTIFIER { $$ = astNode("", "", "") }
+    | CONSTANT { $$ = astNode("", "", "") }
     ;
 
 %%
