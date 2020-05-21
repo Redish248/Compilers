@@ -1,0 +1,5 @@
+Var a, b;
+Begin
+	a := 15;
+	c := 10;
+End

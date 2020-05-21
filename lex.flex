@@ -18,7 +18,10 @@ import java.util.ArrayList;
     }
 
     public void yyerror(String message) {
-      System.out.println(message);
+        System.out.println();
+        System.out.println("------------------------------------------------------");
+        System.out.println("ERROR: Syntax error in line " + (yyline + 1) + ". Unexpected token: " + yytext());
+        System.out.println("------------------------------------------------------");
     }
 
 	ArrayList<String> identifiersConstants = new ArrayList();

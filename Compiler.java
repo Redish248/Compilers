@@ -47,14 +47,17 @@ public class Compiler {
         }
         parentNode.setChildren(childrenNodes);
         if (parent.equals("ROOT")) {
-            printTree(parentNode,0);
+            printTree(parentNode,0, "");
         }
         return parentNode;
    }
 
    public Tree identifierReference(String name) {
        if (!variablesList.contains(name)) {
-           System.out.println("Error: Identifier " + name + " wasn't declared");
+           System.out.println();
+           System.out.println("---------------------------------------");
+           System.out.println("ERROR: Identifier '" + name + "' wasn't declared");
+           System.out.println("---------------------------------------");
            System.exit(0);
        }
        Tree identifier = new Tree(name);
@@ -92,27 +95,25 @@ public class Compiler {
         return node;
     }
 
-   public void printTree(Tree node, int offset) {
-       if (offset >= 5) {
-           for (int i = 0; i < offset - 5; i++) {
-             //  if (i % 5 == 0) {
-             //      System.out.print("|");
-            //   } else {
-                   System.out.print(" ");
-           //    }
-           }
-           System.out.print("|");
-           for (int i = offset - 5; i < offset; i++) {
-               System.out.print("-");
-           }
+   public void printTree(Tree node, int offset, String prefix) {
+       if (prefix.length() > 0) {
+           System.out.print(prefix.substring(0, prefix.length() - 2));
+       }
+       if (offset >= 7) {
+           System.out.print(" |-------");
        }
 
        System.out.println("(" + node.getName() + ")" + ((node.getType() != null) ? (" [" + node.getType() + "]") : ""));
        if (node.getChildren() != null) {
            for (int i = 0; i < node.getChildren().size(); i++) {
-               printTree(node.getChildren().get(i), offset + 5);
+               if (i == node.getChildren().size() - 1) {
+                   printTree(node.getChildren().get(i), offset + 5, prefix.concat("       "));
+               } else {
+                   printTree(node.getChildren().get(i), offset + 5, prefix.concat("      |"));
+               }
            }
        }
    }
-
 }
+
+
