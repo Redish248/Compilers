@@ -6,24 +6,11 @@ public class Tree {
 
     private String type;
 
-    private Tree parent;
-
     private List<Tree> children;
 
-    public boolean isProcessed() {
-        return isProcessed;
-    }
-
-    public void setProcessed(boolean processed) {
-        isProcessed = processed;
-    }
-
-    private boolean isProcessed;
-
-    public Tree(String name, Tree parent) {
+    public Tree(String name) {
         this.name = name;
         checkName();
-        this.parent = parent;
         this.children = null;
     }
 
@@ -33,14 +20,6 @@ public class Tree {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Tree getParent() {
-        return parent;
-    }
-
-    public void setParent(Tree parent) {
-        this.parent = parent;
     }
 
     public List<Tree> getChildren() {
@@ -72,23 +51,19 @@ public class Tree {
             case "OR":
             case "XOR":
                 type = "Binary operator";
-                isProcessed = true;
-                break;
-            case "Var":
-            case "Begin":
-            case "End":
-            case "While":
-            case "Do":
-                type = "Keyword";
-                isProcessed = true;
                 break;
             case ":=":
-                type = "Appropriation";
-                isProcessed = false;
+                type = "Appropriation operator";
+                break;
+            case "Var":
+                type = "Keyword";
+                break;
+            case "U":
+                name = "-";
+                type = "Unary operator";
                 break;
             default:
                 type = null;
-                isProcessed = false;
         }
     }
 }

@@ -1,11 +1,9 @@
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Compiler {
 
-   private Tree currentNode;
    private HashSet<String> variablesList;
 
    public static void main(String[] args) throws IOException {
@@ -38,75 +36,60 @@ public class Compiler {
       }
 
       SyntaxAnalyser syntaxAnalyser = new SyntaxAnalyser((SyntaxAnalyser.Lexer)scanner);
-      Compiler compiler = new Compiler();
-      compiler.createRootNode();
       syntaxAnalyser.parse();
    }
 
-
-   public void createRootNode() {
-       Tree tree = new Tree("ROOT", null);
-       currentNode = tree;
-   }
-
-   public Tree addNode() {
-      return null;
-   }
-
-   public Tree astNode(String parent, String firstChild, String secondChild) {
-        if (!currentNode.getName().equals(parent)) {
-            Tree p = new Tree(parent, currentNode);
-            currentNode = p;
+   public Tree astNode(String parent, Tree ... children) {
+        Tree parentNode = new Tree(parent);
+        ArrayList<Tree> childrenNodes = new ArrayList<>();
+        for (Tree child: children) {
+            childrenNodes.add(child);
         }
-        ArrayList<Tree> children = new ArrayList<>();
-        children.add(new Tree(firstChild, currentNode));
-        children.add(new Tree(secondChild, currentNode));
-        currentNode.setChildren(children);
-        Tree node = currentNode;
-        findNextNode();
+        parentNode.setChildren(childrenNodes);
+        if (parent.equals("ROOT")) {
+            printTree(parentNode);
+        }
+        return parentNode;
+   }
+
+   public Tree identifierReference(String name) {
+       // todo check
+       Tree identifier = new Tree(name);
+       identifier.setType("Identifier");
+       return identifier;
+   }
+
+    public Tree constant(String value) {
+        Tree node = new Tree(value);
+        node.setType("Const");
         return node;
+    }
+
+   public Tree addVariable(String identifier, Tree variables) {
+       Tree varNode = new Tree("Variables list");
+       ArrayList<Tree> children = new ArrayList<>();
+       children.add(new Tree(identifier));
+       children.get(0).setType("Identifier");
+       if (variables != null) children.add(variables);
+       varNode.setChildren(children);
+       return varNode;
    }
 
-   private void findNextNode() {
-       while (checkCurrentNodeProcessing() && !(currentNode.getName().equals("ROOT") && currentNode.isProcessed())) {}
-   }
+    public Tree newAppropriation(String identifier, Tree exp) {
+        Tree node = new Tree("Operator");
+        Tree appropriation = new Tree(":=");
+        ArrayList<Tree> children = new ArrayList<>();
+        ArrayList<Tree> apprChildren = new ArrayList<>();
+        children.add(identifierReference(identifier));
+        children.add(exp);
+        appropriation.setChildren(children);
+        apprChildren.add(appropriation);
+        node.setChildren(apprChildren);
+        return node;
+    }
 
-   private boolean checkCurrentNodeProcessing() {
-       for (Tree node: currentNode.getChildren()) {
-           if (!node.isProcessed()) {
-               currentNode = node;
-               return false;
-           }
-       }
-       currentNode.setProcessed(true);
-       currentNode = currentNode.getParent();
-       return true;
-   }
-
-   public void printTree() {
+   public void printTree(Tree root) {
         // :)
-   }
-
-   public void goToParent() {
-       currentNode = currentNode.getParent();
-   }
-
-
-   public Tree newNumber() {
-      return null;
-   }
-
-   public Tree newAppropriation() {
-      return null;
-   }
-
-   public Tree newVariable() {
-       //чекать на объявление
-      return null;
-   }
-
-   public void addToVariablesList(Tree variable) {
-       variablesList.add(variable.getName());
    }
 
 }

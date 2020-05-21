@@ -1,7 +1,7 @@
 %language "Java"
 
-%define api.parser.class {SyntaxAnalyser}
-%define api.parser.public
+//%define api.parser.class {SyntaxAnalyser}
+//%define api.parser.public
 
 
 %token COMMENT
@@ -21,52 +21,57 @@
 
 %start program
 
+%code {
+	public Compiler compiler = new Compiler();
+}
+
 %%
 
 program:
-    variablesDeclarations programBody { $$ = astNode("ROOT", "Variable Declaration", "Program Body") }
+    variablesDeclarations programBody { $$ = compiler.astNode("ROOT", $1, $2); }
     ;
 
 programBody:
-    BEGIN_KEYWORD operators END_KEYWORD { $$ = $2 }
+    BEGIN_KEYWORD operators END_KEYWORD { $$ = compiler.astNode("Program Body", $2); }
     ;
 
 variablesDeclarations:
-    VAR_KEYWORD variables { $$ = astNode("Variables Declaration", "Var", "Variables") }
+    VAR_KEYWORD variables { $$ = compiler.astNode("Variables Declaration", new Tree("Var"), $2); }
     ;
 
 variables:
-    IDENTIFIER SEMICOLON_SEPARATOR { $$ = astNode("", "", "") }
-    | IDENTIFIER COMMA_SEPARATOR variables { $$ = astNode("", "", "") }
-    | IDENTIFIER SEMICOLON_SEPARATOR variables { $$ = astNode("", "", "") }
+    IDENTIFIER SEMICOLON_SEPARATOR { $$ = compiler.addVariable(yyval.toString(), null); }
+    | IDENTIFIER COMMA_SEPARATOR variables { $$ = compiler.addVariable(yyval.toString(), $3); }
+    | IDENTIFIER SEMICOLON_SEPARATOR variables { $$ = compiler.addVariable(yyval.toString(), $3); }
     ;
 
 operators:
-    operator { $$ = astNode("", "", "") }
-    | operator operators { $$ = astNode("", "", "") }
+    operator { $$ = compiler.astNode("Operators", $1); }
+    | operator operators { $$ = compiler.astNode("Operators", $1, $2); }
     ;
 
 operator:
-   IDENTIFIER APPROPRIATION_OPERATOR expression { $$ = astNode("", "", "") }
-   | BEGIN_KEYWORD operators END_KEYWORD { $$ = astNode("", "", "") }
-   | LOOP_START expression DO_KEYWORD operator { $$ = astNode("", "", "") }
+   IDENTIFIER APPROPRIATION_OPERATOR expression SEMICOLON_SEPARATOR { $$ = compiler.newAppropriation(yyval.toString(), $3); }
+   | BEGIN_KEYWORD operators END_KEYWORD { $$ = compiler.astNode("Operator", $2); }
+   | LOOP_START expression DO_KEYWORD operator { $$ = compiler.astNode("Loop", $2, $4); }
    ;
 
 
 expression:
-    UNARY_MINUS expression { $$ = astNode("", "", "") }
-    | START_BRACKET expression END_BRACKET { $$ = astNode("", "", "") }
-    | expression PLUS expression { $$ = astNode("+", "Expression", "Expression"); }
-    | expression MULTIPLY expression { $$ = astNode("*", "Expression", "Expression");; }
-    | expression DIVIDE expression { $$ = astNode("/", "Expression", "Expression");; }
-    | expression GRATER_OPERATOR expression { $$ = astNode(">", "Expression", "Expression");; }
-    | expression LESS_OPERATOR expression { $$ = astNode("<", "Expression", "Expression");; }
-    | expression EQUALS_OPERATOR expression { $$ = astNode("=", "Expression", "Expression"); }
-    | expression AND_OPERATOR expression { $$ = astNode("AND", "Expression", "Expression"); }
-    | expression OR_OPERATOR expression   { $$ = astNode("OR", "Expression", "Expression"); }
-    | expression XOR_OPERATOR expression  { $$ = astNode("XOR", "Expression", "Expression"); }
-    | IDENTIFIER { $$ = astNode("", "", "") }
-    | CONSTANT { $$ = astNode("", "", "") }
+    UNARY_MINUS expression { $$ = compiler.astNode("Expression", new Tree("U"), $2); }
+    | START_BRACKET expression END_BRACKET { $$ = compiler.astNode("Expression", $2); }
+    | expression PLUS expression { $$ = compiler.astNode("Expression", $1, new Tree("+"), $3); }
+    | expression MULTIPLY expression { $$ = compiler.astNode("Expression", $1, new Tree("*"), $3); }
+    | expression DIVIDE expression { $$ = compiler.astNode("Expression", $1, new Tree("/"), $3); }
+    | expression BINARY_MINUS expression { $$ = compiler.astNode("Expression", $1, new Tree("-"), $3); }
+    | expression GRATER_OPERATOR expression { $$ = compiler.astNode("Expression", $1, new Tree(">"), $3); }
+    | expression LESS_OPERATOR expression { $$ = compiler.astNode("Expression", $1, new Tree("<+>"), $3); }
+    | expression EQUALS_OPERATOR expression { $$ = compiler.astNode("Expression", $1, new Tree("="), $3); }
+    | expression AND_OPERATOR expression { $$ = compiler.astNode("Expression", $1, new Tree("AND"), $3); }
+    | expression OR_OPERATOR expression   { $$ = compiler.astNode("Expression", $1, new Tree("OR"), $3); }
+    | expression XOR_OPERATOR expression  { $$ = compiler.astNode("Expression", $1, new Tree("XOR"), $3); }
+    | IDENTIFIER { $$ = compiler.identifierReference(yyval.toString()); }
+    | CONSTANT { $$ = compiler.constant(yyval.toString()); }
     ;
 
 %%

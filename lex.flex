@@ -1,4 +1,5 @@
-import com.sun.org.apache.xpath.internal.operations.String;import java.util.ArrayList;
+import java.lang.String;
+import java.util.ArrayList;
 %%
 
 %class LexerAnalyser
@@ -25,17 +26,17 @@ import com.sun.org.apache.xpath.internal.operations.String;import java.util.Arra
 	private String getHex(String number) {
 		return Integer.toString(Integer.parseInt(number), 16);
 	}
-	
+
 	private boolean checkForKeyWords(String lexem, int line, int symbol) {
 		String[] words = {"End", "Var", "Do", "Begin", "AND", "XOR", "WHILE", "OR"};
-		
+
 		for (int i = 0; i < 8; i++) {
 			if (words[i].toLowerCase().equals(lexem.toLowerCase())) {
-				System.out.printf("Found unknown Lexem: '%s'. Didn't you mean '%s'? Line - %d, start symbol - %d\n", lexem, words[i], line, symbol);	
+				System.out.printf("Found unknown Lexem: '%s'. Didn't you mean '%s'? Line - %d, start symbol - %d\n", lexem, words[i], line, symbol);
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -58,7 +59,7 @@ LoopStart = "WHILE"
 {Comment} {
             System.out.printf("Found Comment: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
             yylval = new String(yytext());
-            return SyntaxAnalyser.Lexer.COMMENT;
+            //return SyntaxAnalyser.Lexer.COMMENT;
         }
 {Keyword} {
             System.out.printf("Found Keyword: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
