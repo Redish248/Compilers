@@ -5,3 +5,7 @@ Compilers.iml
 SyntaxAnalyser.java
 /Tree.class
 /Compiler.class
+/SyntaxAnalyser$1.class
+/SyntaxAnalyser$Lexer.class
+/SyntaxAnalyser$YYStack.class
+/SyntaxAnalyser.class

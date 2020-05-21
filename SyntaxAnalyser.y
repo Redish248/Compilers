@@ -1,7 +1,7 @@
 %language "Java"
 
-//%define api.parser.class {SyntaxAnalyser}
-//%define api.parser.public
+%define api.parser.class {SyntaxAnalyser}
+%define api.parser.public
 
 
 %token COMMENT

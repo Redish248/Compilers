@@ -1,0 +1,14 @@
+Var a, b, c;
+Begin
+a := 15;
+c := 10;
+b := a + c ;
+
+WHILE (-(c > a)) DO
+Begin
+c := c + 4;
+End
+
+c := a - b;
+
+End

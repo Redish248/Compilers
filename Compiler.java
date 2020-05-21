@@ -47,7 +47,7 @@ public class Compiler {
         }
         parentNode.setChildren(childrenNodes);
         if (parent.equals("ROOT")) {
-            printTree(parentNode);
+            printTree(parentNode,0);
         }
         return parentNode;
    }
@@ -92,8 +92,27 @@ public class Compiler {
         return node;
     }
 
-   public void printTree(Tree root) {
-        // :)
+   public void printTree(Tree node, int offset) {
+       if (offset >= 5) {
+           for (int i = 0; i < offset - 5; i++) {
+             //  if (i % 5 == 0) {
+             //      System.out.print("|");
+            //   } else {
+                   System.out.print(" ");
+           //    }
+           }
+           System.out.print("|");
+           for (int i = offset - 5; i < offset; i++) {
+               System.out.print("-");
+           }
+       }
+
+       System.out.println("(" + node.getName() + ")" + ((node.getType() != null) ? (" [" + node.getType() + "]") : ""));
+       if (node.getChildren() != null) {
+           for (int i = 0; i < node.getChildren().size(); i++) {
+               printTree(node.getChildren().get(i), offset + 5);
+           }
+       }
    }
 
 }
