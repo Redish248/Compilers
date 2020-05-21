@@ -150,4 +150,9 @@ LoopStart = "WHILE"
                 }
 }
 {Whitespaces} {}
-. {System.out.printf("ERROR. Unepected token: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn); System.exit(0);}
+. {
+          System.out.println();
+          System.out.println("------------------------------------------------------");
+          System.out.printf("ERROR. Unepected token: %s - line: %d, start symbol: %d\n", yytext(), yyline+1, yycolumn);
+          System.out.println("------------------------------------------------------");
+          System.exit(0);}
