@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 public class Compiler {
 
-   private HashSet<String> variablesList;
+   private HashSet<String> variablesList = new HashSet<>();
 
    public static void main(String[] args) throws IOException {
 
@@ -53,7 +53,10 @@ public class Compiler {
    }
 
    public Tree identifierReference(String name) {
-       // todo check
+       if (!variablesList.contains(name)) {
+           System.out.println("Error: Identifier " + name + " wasn't declared");
+           System.exit(0);
+       }
        Tree identifier = new Tree(name);
        identifier.setType("Identifier");
        return identifier;
@@ -72,6 +75,7 @@ public class Compiler {
        children.get(0).setType("Identifier");
        if (variables != null) children.add(variables);
        varNode.setChildren(children);
+       variablesList.add(identifier);
        return varNode;
    }
 
